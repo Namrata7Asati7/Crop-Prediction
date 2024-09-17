@@ -11,16 +11,30 @@ with open('crop_model.pkl', 'rb') as f:
 @main.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Get data from form
-        nitrogen = float(request.form.get('nitrogen'))
-        potassium = float(request.form.get('potassium'))
-        ph = float(request.form.get('ph'))
-        rainfall = float(request.form.get('rainfall'))
-        temperature = float(request.form.get('temperature'))
+        # Get data from form with default value handling
+        nitrogen = request.form.get('nitrogen')
+        potassium = request.form.get('potassium')
+        pH = request.form.get('pH')
+        rainfall = request.form.get('rainfall')
+        temperature = request.form.get('temperature')
+
+        # Check if any of the required fields are missing or empty
+        if not all([nitrogen, potassium, pH, rainfall, temperature]):
+            return "Please fill in all the fields."
+
+        try:
+            # Convert data to float
+            nitrogen = float(nitrogen)
+            potassium = float(potassium)
+            pH = float(pH)
+            rainfall = float(rainfall)
+            temperature = float(temperature)
+        except ValueError:
+            return "Please enter valid numerical values."
 
         # Create a DataFrame for the model
-        input_data = pd.DataFrame([[nitrogen, potassium, ph, rainfall, temperature]], 
-                                  columns=['Nitrogen', 'Potassium', 'pH', 'Rainfall', 'Temperature'])
+        input_data = pd.DataFrame([[nitrogen, potassium, pH, rainfall, temperature]], 
+                                  columns=['N', 'K', 'pH', 'rainfall', 'temperature'])
 
         # Predict using the model
         prediction = model.predict(input_data)
