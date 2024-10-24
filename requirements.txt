@@ -6,6 +6,5 @@ Flask-WTF==1.0.0
 gunicorn
 cython
 scikit-learn==1.2.2
-pip install --upgrade pip setuptools wheel
 runtime: python3
 pythonVersion: "3.11.4"
